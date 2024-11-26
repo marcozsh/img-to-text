@@ -13,8 +13,10 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+	primary: "#F70D5E"
       },
     },
   },
   plugins: [nextui()],
+  darkMode : 'class',
 } satisfies Config;

@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { toBase64, processImage } from "@/logical/img-to-text";
-import { CircularProgress } from "@nextui-org/react";
+import { Button, CircularProgress } from "@nextui-org/react";
+import { copyToClipboard } from "@/logical/utils";
+import toast from "react-hot-toast";
 
 export default function ImgToText() {
   const [inputValue, setInputValue] = useState<string>("");
@@ -24,7 +26,7 @@ export default function ImgToText() {
         const extractedText = await processImage(base64String);
         setInputValue(extractedText);
       } else {
-        alert("Por favor, arrastra una imagen.");
+        toast.error("Archivo no corresponde a una imagen");
       }
     }
     setLoading(false);
@@ -49,6 +51,8 @@ export default function ImgToText() {
             }
             setInputValue(extractedText);
           }
+        } else {
+          toast.error("Lo copiado no corresponde a una imagen");
         }
       }
     }
@@ -57,9 +61,9 @@ export default function ImgToText() {
 
   return (
     <>
-      <section className="flex flex-col gap-12">
+      <section className="flex flex-col gap-12 pb-2 w-[1000px]">
         <div
-          className="flex items-center justify-center mt-5 w-full h-52 border-2 border-dashed border-[color:#F70D5E]"
+          className="flex items-center justify-center mt-32 w-full h-96 border-2 rounded-md border-primary"
           onPaste={ImgToBs64Paste}
           onDrop={ImgToBs64Drop}
           onDragOver={dropFunction}
@@ -67,9 +71,30 @@ export default function ImgToText() {
           <p>Pega o Arrastra una Imagen Aquí</p>
         </div>
         <div className="flex flex-col justify-center items-center gap-2">
-          <p>Resultado: </p>
-          {inputValue}
-	  {showLoading && <CircularProgress label="Cargando" color="danger" />}
+          {inputValue != "" ? (<p>Resultado: </p>) : ""}
+	  {inputValue}
+          {showLoading && <CircularProgress label="Cargando" color="danger" />}
+          {inputValue != "" ? (
+            <Button
+              color="danger"
+              onClick={() =>
+                copyToClipboard(inputValue).then(() =>
+                  toast.success("texto copiado"),
+                )
+              }
+            >
+              Copiar al clipboard
+            </Button>
+          ) : (
+            ""
+          )}
+          {inputValue != "" ? (
+            <Button color="danger" onClick={() => setInputValue("")}>
+              Empezar de nuevo
+            </Button>
+          ) : (
+            ""
+          )}
         </div>
       </section>
     </>
