@@ -15,7 +15,7 @@ export default function BlogComponent({
         </h2>
         <div className="prose-lg sm:prose-2xl sm:leading-[38.4px] break-words">
           <article>
-            <p className="text-2xl">{content == undefined ? "" : content}</p>
+            <p className="text-2xl leading-[150%]">{content == undefined ? "" : content}</p>
           </article>
         </div>
       </section>
