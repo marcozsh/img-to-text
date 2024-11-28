@@ -2,6 +2,7 @@
 import CustomNavBar from "@/components/custom-nav-bar";
 import Link from "next/link";
 import Footer from "@/components/footer";
+import Separator from "@/components/separator";
 export default function NotFound() {
   return (
     <>
@@ -13,13 +14,15 @@ export default function NotFound() {
           <div className="flex flex-col justify-center text-center">
             <h2 className="text-5xl mb-8">404...</h2>
             <iframe
-              src="https://giphy.com/embed/QMHoU66sBXqqLqYvGO"
+              src="https://giphy.com/embed/z9AUvhAEiXOqA"
               allowFullScreen
+	      height="222"
             ></iframe>
             <h3 className="my-20 text-4xl hover:text-red-400 hover:transition-colors hover:duration-300 hover:ease-in-out">
               <Link href="/">Volver al Inicio</Link>
             </h3>
           </div>
+	  <Separator/>
           <div className="mt-10">
             <Footer />
           </div>

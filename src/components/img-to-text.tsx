@@ -61,7 +61,7 @@ export default function ImgToText() {
 
   return (
     <>
-      <section className="flex flex-col gap-12 pb-2 w-[1000px]">
+      <section className="flex flex-col gap-12 pb-2 w-[90%] md:w-[700px] lg:w-[1000px]">
         <div
           className="flex items-center justify-center mt-32 w-full h-96 border-2 rounded-md border-primary"
           onPaste={ImgToBs64Paste}

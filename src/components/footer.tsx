@@ -7,13 +7,13 @@ export default function Footer() {
     <>
       <footer className="text-center flex flex-col">
         <p>Este sitio fue construido con ❤️</p>
-        <div className="text-center p-[15px] flex flex-wrap justify-center gap-3 h-1 550px:h-16">
+        <div className="text-center p-[40px] lg:p-[10px] flex flex-wrap justify-center gap-3 h-1 550px:h-16">
           <img className="rounded" src={nextjs} alt="nextjs img" />
           <img className="rounded" src={ts} alt="ts img" />
           <img className="rounded" src={tailwind} alt="tailwind img" />
           <br />
         </div>
-        <div id="contact" className="flex flex-row pt-5 justify-center">
+        <div id="contact" className="flex flex-row pt-14 lg:pt-5 justify-center">
           <Image src="/mail.png" alt="mail image" width={30} height={30} />
           <Link
             className="pt-[4px] underline  hover:text-primary hover:transition-colors hover:duration-300 hover:ease-in-out"

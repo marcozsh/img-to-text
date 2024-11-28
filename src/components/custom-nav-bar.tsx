@@ -15,13 +15,12 @@ import ThemeToggle from "./theme-toggle";
 import Image from "next/image";
 
 export default function CustomNavBar() {
-
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const menuItems = [
-    { name: "Inicio", href: "/" },
+    { name: "Inicio", href: "/home" },
     { name: "¿Cómo funciona?", href: "how-it-works" },
   ];
 
@@ -39,9 +38,9 @@ export default function CustomNavBar() {
           className="sm:hidden text-primary"
         />
         <NavbarBrand>
-          <Link href="/">
+          <Link href="/home">
             <Image src="/icon.png" width={40} height={40} alt="icon image" />
-            <h1 className="text-2xl font-bold text-inherit text-white md:pl-5">
+            <h1 className=" pl-4 md:text-1xl lg:text-2xl font-bold text-inherit dark:text-white md:pl-5 dark:hover:text-primary dark:hover:transition-colors dark:hover:duration-300 dark:hover:ease-in-out">
               Convertir Imagen a Texto
             </h1>
           </Link>
@@ -50,26 +49,18 @@ export default function CustomNavBar() {
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
-          <Link href="/">
-            <span className="text-[#fafafa] hover:text-primary hover:transition-colors hover:duration-300 hover:ease-in-out">
+          <Link href="/home">
+            <span className="text-primary dark:text-white dark:hover:text-primary dark:hover:transition-colors dark:hover:duration-300 dark:hover:ease-in-out ">
               Inicio
             </span>
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link
-            href="how-it-works/"
-            aria-current="page"
-          >
-            <span className="text-[#fafafa] hover:text-primary hover:transition-colors hover:duration-300 hover:ease-in-out">
+          <Link href="how-it-works/" aria-current="page">
+            <span className="text-primary dark:text-white dark:hover:text-primary dark:hover:transition-colors dark:hover:duration-300 dark:hover:ease-in-out ">
               ¿Cómo funciona?
             </span>
           </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <span className="text-[#fafafa] hover:text-primary hover:transition-colors hover:duration-300 hover:ease-in-out cursor-pointer">
-            <ThemeToggle />
-          </span>
         </NavbarItem>
       </NavbarContent>
 
@@ -88,6 +79,11 @@ export default function CustomNavBar() {
           </NavbarMenuItem>
         ))}
       </NavbarMenu>
+      <NavbarItem>
+        <span className="text-primary dark:text-white dark:hover:text-primary dark:hover:transition-colors dark:hover:duration-300 dark:hover:ease-in-out cursor-pointer">
+          <ThemeToggle />
+        </span>
+      </NavbarItem>
     </Navbar>
   );
 }
