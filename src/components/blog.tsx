@@ -15,9 +15,6 @@ export default function BlogComponent({
         </h2>
         <div className="prose-lg sm:prose-2xl sm:leading-[38.4px] break-words">
 	  <article className="text-xl lg:text-2xl leading-[150%]" dangerouslySetInnerHTML={{__html: `${content}`}}/>
-	  {
-	  //<p className="text-xl lg:text-2xl leading-[150%]">{content == undefined ? "" : content}</p>
-	  }
         </div>
       </section>
     </>
