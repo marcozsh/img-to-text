@@ -22,8 +22,8 @@ export const blogContent = [
     content: `<p>
     	Tesseract.js es una biblioteca de JavaScript que permite realizar reconocimiento óptico de caracteres (OCR, por sus siglas en inglés) 
 	directamente en el navegador o en un entorno Node.js. 
-	Está basada en Tesseract OCR, un motor de código abierto desarrollado originalmente por HP y actualmente mantenido por Google, 
-	que es uno de los más avanzados y precisos en su tipo.</p>`,
+	Está basada en Tesseract OCR, un motor de código abierto desarrollado originalmente por HP(Hewlett-Packard) y actualmente mantenido por Google, 
+	es uno de los más avanzados y precisos en su tipo.</p>`,
   },
   {
     title: "¿Qué es OCR?",
