@@ -12,15 +12,20 @@ import {
 import { copyToClipboard } from "@/logical/utils";
 import toast from "react-hot-toast";
 import { analyzeImageFromBase64 } from "@/logical/ai-analyze";
+import {useCurrentSession} from "./session";
 
 export default function ImgToText() {
   const [inputValue, setInputValue] = useState<string>("");
+
 
   const [fileName, setFileName] = useState<string>("Sube un archivo");
 
   const [showLoading, setLoading] = useState<boolean>(false);
 
-  const [isAiDetectionSelected, setAiDetectionSelected] = useState<boolean>(false);
+  const [isAiDetectionSelected, setAiDetectionSelected] =
+    useState<boolean>(false);
+
+ const session = useCurrentSession();
 
   const dropFunction = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -60,7 +65,7 @@ export default function ImgToText() {
           if (file) {
             const base64String = await toBase64(file);
             let extractedText = "";
-	    console.log(base64String);
+            console.log(base64String);
             if (isAiDetectionSelected) {
               extractedText = await analyzeImageFromBase64(base64String);
             } else {
@@ -104,18 +109,23 @@ export default function ImgToText() {
 
   return (
     <>
-      <section className="flex flex-col gap-7 pb-3 w-[90%] md:w-[700px] lg:w-[1000px]">
-        <div className="z-10 flex justify-start lg:justify-end mt-24">
-          <Switch
-            isSelected={isAiDetectionSelected}
-            onValueChange={setAiDetectionSelected}
-            color="primary"
-          >
-            <span className="dark:text-white text-primary">
-              Reconocimiento con IA
-            </span>
-          </Switch>
-        </div>
+      <section className="flex flex-col gap-7 pb-3 w-[90%] md:w-[700px] lg:w-[1000px] mt-24">
+        {session && (
+          <>
+            <div className="z-10 flex justify-start lg:justify-end ">
+              <Switch
+                isSelected={isAiDetectionSelected}
+                onValueChange={setAiDetectionSelected}
+                color="primary"
+              >
+                <span className="dark:text-white text-primary">
+                  Reconocimiento con IA
+                </span>
+              </Switch>
+            </div>
+          </>
+        )}
+
         <div
           className="dark:bg-background flex flex-col items-center justify-center w-full h-96 border-2 rounded-md border-primary"
           onPaste={ImgToBs64Paste}

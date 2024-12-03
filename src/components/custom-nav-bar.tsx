@@ -13,15 +13,39 @@ import {
 import { useState } from "react";
 import ThemeToggle from "./theme-toggle";
 import Image from "next/image";
+import { signOut } from "next-auth/react";
+import { useCurrentSession } from "./session";
 
 export default function CustomNavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const session = useCurrentSession();
 
-  const menuItems = [
-    { name: "Inicio", href: "/home" },
-    { name: "¿Cómo funciona?", href: "how-it-works" },
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const customSignout = () => {
+    localStorage.removeItem("session");
+    signOut({ callbackUrl: `/signin` });
+  };
+
+  const v = () => null;
+  let sesionItems = session
+    ? [
+        {
+          name: session.user?.name,
+          href: "",
+	  customFn: v
+        },
+        {
+          name: "Salir",
+          href: "",
+          customFn: customSignout,
+        },
+      ]
+    : [{ name: "Iniciar Sesión", href: "signin", customFn: v}];
+
+  let menuItems = [
+    { name: "Inicio", href: "/home"},
+    { name: "¿Cómo funciona?", href: "how-it-works"},
   ];
 
   //console.log(isMenuOpen);
@@ -62,6 +86,36 @@ export default function CustomNavBar() {
             </span>
           </Link>
         </NavbarItem>
+        {session ? (
+          <>
+            <NavbarItem isActive>
+              <span className="text-primary dark:text-white dark:hover:text-primary dark:hover:transition-colors dark:hover:duration-300 dark:hover:ease-in-out cursor-default">
+                {session.user?.name}
+              </span>
+              <Button
+                className="bg-background"
+                onPress={() => {
+                  localStorage.removeItem("session");
+                  signOut({ callbackUrl: `/signin` });
+                }}
+              >
+                <span className="text-primary dark:text-white dark:hover:text-primary dark:hover:transition-colors dark:hover:duration-300 dark:hover:ease-in-out ">
+                  Salir
+                </span>
+              </Button>
+            </NavbarItem>
+          </>
+        ) : (
+          <>
+            <NavbarItem>
+              <Link href="signin/" aria-current="page">
+                <span className="text-primary dark:text-white dark:hover:text-primary dark:hover:transition-colors dark:hover:duration-300 dark:hover:ease-in-out ">
+                  Iniciar Sesión
+                </span>
+              </Link>
+            </NavbarItem>
+          </>
+        )}
       </NavbarContent>
 
       <NavbarMenu>
@@ -71,13 +125,26 @@ export default function CustomNavBar() {
               className="w-full text-white bg-primary"
               href={`${item.href}`}
               size="lg"
-              onPress={toggleMenu}
               as={Link}
             >
               {item.name}
             </Button>
           </NavbarMenuItem>
         ))}
+       {sesionItems.map((item, i) => (
+          <NavbarMenuItem key={`${i}`}>
+            <Button
+              className="w-full text-white bg-primary"
+              href={`${item.href}`}
+              size="lg"
+              onPress={item.customFn}
+              as={Link}
+            >
+              {item.name}
+            </Button>
+          </NavbarMenuItem>
+        ))}
+
       </NavbarMenu>
       <NavbarItem>
         <span className="text-primary dark:text-white dark:hover:text-primary dark:hover:transition-colors dark:hover:duration-300 dark:hover:ease-in-out cursor-pointer">
