@@ -2,9 +2,17 @@
 
 import { useState } from "react";
 import { toBase64, processImage } from "@/logical/img-to-text";
-import { Button, CircularProgress, Input, Textarea } from "@nextui-org/react";
+import {
+  Button,
+  CircularProgress,
+  Input,
+  Switch,
+  Textarea,
+} from "@nextui-org/react";
 import { copyToClipboard } from "@/logical/utils";
 import toast from "react-hot-toast";
+//import { analyzeImageFromBase64 } from "@/logical/ai-analyze";
+import { useSession } from "next-auth/react";
 
 export default function ImgToText() {
   const [inputValue, setInputValue] = useState<string>("");
@@ -12,6 +20,16 @@ export default function ImgToText() {
   const [fileName, setFileName] = useState<string>("Sube un archivo");
 
   const [showLoading, setLoading] = useState<boolean>(false);
+
+  const [isAiDetectionSelected, setAiDetectionSelected] =
+    useState<boolean>(false);
+
+  const setAiDetectionSelectedNotLogIn = () => {
+    //toast("Para usar esa función debes iniciar sesión"); // todo: add cloud vision from google to ai recognition
+    toast("Esta función aún no está disponible");
+  };
+
+  //const { data: session } = useSession();
 
   const dropFunction = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -50,7 +68,13 @@ export default function ImgToText() {
           const file = item.getAsFile();
           if (file) {
             const base64String = await toBase64(file);
-            let extractedText = await processImage(base64String);
+	    console.log(base64String);
+            let extractedText = "";
+            extractedText = await processImage(base64String);
+            //if (isAiDetectionSelected) {
+              //extractedText = await analyzeImageFromBase64(base64String);
+            //} else {
+            //}
             if (extractedText.length > 0) {
               setInputValue(extractedText);
             } else {
@@ -89,9 +113,24 @@ export default function ImgToText() {
 
   return (
     <>
-      <section className="flex flex-col gap-12 pb-2 w-[90%] md:w-[700px] lg:w-[1000px]">
+      <section className="flex flex-col gap-7 pb-3 w-[90%] md:w-[700px] lg:w-[1000px] mt-24">
+        <div className="z-10 flex justify-start lg:justify-end ">
+          <Switch
+            isSelected={isAiDetectionSelected}
+            onValueChange={
+              //session ? setAiDetectionSelected : setAiDetectionSelectedNotLogIn
+	     setAiDetectionSelectedNotLogIn
+            }
+            color="primary"
+          >
+            <span className="dark:text-white text-primary">
+              Reconocimiento con IA
+            </span>
+          </Switch>
+        </div>
+
         <div
-          className="dark:bg-background flex flex-col items-center justify-center mt-32 w-full h-96 border-2 rounded-md border-primary"
+          className="dark:bg-background flex flex-col items-center justify-center w-full h-96 border-2 rounded-md border-primary"
           onPaste={ImgToBs64Paste}
           onDrop={ImgToBs64Drop}
           onDragOver={dropFunction}
