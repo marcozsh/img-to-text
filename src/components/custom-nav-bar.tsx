@@ -13,18 +13,37 @@ import {
 import { useState } from "react";
 import ThemeToggle from "./theme-toggle";
 import Image from "next/image";
+import { signOut } from "next-auth/react";
 
-export default function CustomNavBar() {
+type CustomNavBarType = {
+  name?: string | null;
+};
+
+export default function CustomNavBar({ name }: CustomNavBarType) {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const customSignout = () => {
+    signOut({ callbackUrl: `/signin` });
+  };
+  const v = () => {};
+  let sesionItems = name
+    ? [
+        {
+          name: name,
+          href: "",
+          customFn: v,
+        },
+        {
+          name: "Salir",
+          href: null,
+          customFn: customSignout,
+        },
+      ]
+    : [{ name: "Iniciar Sesión", href: "signin", customFn: v }];
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-
-  const menuItems = [
+  let menuItems = [
     { name: "Inicio", href: "/home" },
     { name: "¿Cómo funciona?", href: "how-it-works" },
   ];
-
-  //console.log(isMenuOpen);
 
   return (
     <Navbar
@@ -35,7 +54,7 @@ export default function CustomNavBar() {
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          className="sm:hidden text-primary"
+          className="md:hidden text-primary"
         />
         <NavbarBrand>
           <Link href="/home">
@@ -47,7 +66,7 @@ export default function CustomNavBar() {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+      <NavbarContent className="hidden md:flex gap-4" justify="center">
         <NavbarItem>
           <Link href="/home">
             <span className="text-primary dark:text-white dark:hover:text-primary dark:hover:transition-colors dark:hover:duration-300 dark:hover:ease-in-out ">
@@ -62,6 +81,36 @@ export default function CustomNavBar() {
             </span>
           </Link>
         </NavbarItem>
+        {name ? (
+          <>
+            <NavbarItem isActive>
+              <span className="text-primary dark:text-white dark:hover:text-primary dark:hover:transition-colors dark:hover:duration-300 dark:hover:ease-in-out cursor-default">
+                {name}
+              </span>
+              <Button
+                className="bg-background"
+                onPress={() => {
+                  localStorage.removeItem("session");
+                  signOut({ callbackUrl: `/signin` });
+                }}
+              >
+                <span className="text-primary dark:text-white dark:hover:text-primary dark:hover:transition-colors dark:hover:duration-300 dark:hover:ease-in-out ">
+                  Salir
+                </span>
+              </Button>
+            </NavbarItem>
+          </>
+        ) : (
+          <>
+            <NavbarItem>
+              <Link href="signin/" aria-current="page">
+                <span className="text-primary dark:text-white dark:hover:text-primary dark:hover:transition-colors dark:hover:duration-300 dark:hover:ease-in-out ">
+                  Iniciar Sesión
+                </span>
+              </Link>
+            </NavbarItem>
+          </>
+        )}
       </NavbarContent>
 
       <NavbarMenu>
@@ -71,8 +120,20 @@ export default function CustomNavBar() {
               className="w-full text-white bg-primary"
               href={`${item.href}`}
               size="lg"
-              onPress={toggleMenu}
               as={Link}
+            >
+              {item.name}
+            </Button>
+          </NavbarMenuItem>
+        ))}
+        {sesionItems.map((item, i) => (
+          <NavbarMenuItem key={`${i}`}>
+            <Button
+              className="w-full text-white bg-primary"
+              href={item.href ? `${item.href}` : "#"}
+              size="lg"
+              onPress={item.customFn}
+              as={item.href ? Link : Button}
             >
               {item.name}
             </Button>

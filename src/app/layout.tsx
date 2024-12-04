@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import { roboto } from "./fonts";
-import {Providers, ThemeProviders} from "./providers";
+import { Providers, ThemeProviders } from "./providers";
+import SessionWrapper from "./session-wrapper";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
+import Footer from "@/components/footer";
+import Separator from "@/components/separator";
+import NavbarSession from "@/components/session-nav";
 
 export const metadata: Metadata = {
   title: "Convertir Imagen a Texto",
@@ -15,15 +19,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" suppressHydrationWarning>
-      <body
-        className={`${roboto.className} antialiased flex flex-col items-center`}
-      >
+    <SessionWrapper>
+        <html lang="es" suppressHydrationWarning>
+          <body
+            className={`${roboto.className} antialiased flex flex-col items-center`}
+          >
       <ThemeProviders>
-        <Toaster position="top-left"/>
-        <Providers>{children}</Providers>
+      	    <NavbarSession/>
+            <Toaster position="top-left" />
+            <Providers>{children}</Providers>
+            <Separator />
+            <Footer />
       </ThemeProviders>
-      </body>
-    </html>
+          </body>
+        </html>
+    </SessionWrapper>
   );
 }
