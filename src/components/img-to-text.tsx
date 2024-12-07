@@ -113,8 +113,8 @@ export default function ImgToText() {
 
   return (
     <>
-      <section className="flex flex-col gap-7 pb-3 w-[90%] md:w-[700px] lg:w-[1000px] mt-24">
-        <div className="z-10 flex justify-start lg:justify-end ">
+      <section className="flex flex-col gap-7 pb-3 w-[90%] md:w-[700px] lg:w-[1000px] mt-40">{/*mt-24 with ai switch is active*/}
+        <div className="z-10 justify-start lg:justify-end hidden">
           <Switch
             isSelected={isAiDetectionSelected}
             onValueChange={
