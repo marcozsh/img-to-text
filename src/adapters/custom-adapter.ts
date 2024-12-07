@@ -54,7 +54,7 @@ export const PgCustomAdapter = (): Adapter => {
         return null;
       }
     },
-
+    
     async getUserByEmail(email: string): Promise<AdapterUser | null> {
       try {
         const result = await sql`

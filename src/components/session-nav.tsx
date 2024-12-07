@@ -17,7 +17,7 @@ export default async function NavbarSession(): Promise<any> {
         ) : (
            <>
             <header className="flex justify-center w-screen">
-              <CustomNavBar name={null} />
+              <CustomNavBar name={null}/>
             </header>
           </>
         )}
