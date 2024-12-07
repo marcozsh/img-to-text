@@ -2,15 +2,12 @@ import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../../lib/authOptions";
 
-type UsuarioPageProps = {
-  params: {
-    username: string;
-  };
-};
-
-export default async function UsuarioPage({ params }: UsuarioPageProps) {
-
-  const { username } = await params;
+export default async function UsuarioPage({
+  params,
+}: {
+  params: Promise<{ username: string }>;
+}) {
+  const username = (await params).username;
 
   const usernameDecoded = decodeURIComponent(username);
 
