@@ -11,8 +11,9 @@ import {
 } from "@nextui-org/react";
 import { copyToClipboard } from "@/logical/utils";
 import toast from "react-hot-toast";
-//import { analyzeImageFromBase64 } from "@/logical/ai-analyze";
 import { useSession } from "next-auth/react";
+import { saveLog } from "@/logical/server-querys";
+//import { analyzeImageFromBase64 } from "@/logical/ai-analyze";
 
 export default function ImgToText() {
   const [inputValue, setInputValue] = useState<string>("");
@@ -29,86 +30,115 @@ export default function ImgToText() {
     toast("Esta función aún no está disponible");
   };
 
-  //const { data: session } = useSession();
+  const { data: session } = useSession();
 
   const dropFunction = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
   };
 
   const ImgToBs64Drop = async (event: React.DragEvent<HTMLDivElement>) => {
-    setLoading(true);
-    event.preventDefault();
-    const files = event.dataTransfer.files;
-    if (files.length > 0) {
-      const file = files[0];
-      if (file.type.startsWith("image")) {
-        const base64String = await toBase64(file);
-        let extractedText = await processImage(base64String);
-        if (extractedText.length > 0) {
-          setInputValue(extractedText);
+    if (!showLoading) {
+      setLoading(true);
+      event.preventDefault();
+      const files = event.dataTransfer.files;
+      if (files.length > 0) {
+        const file = files[0];
+        if (file.type.startsWith("image")) {
+          const base64String = await toBase64(file);
+          let extractedText = await processImage(base64String);
+          if (extractedText.length > 0) {
+            setInputValue(extractedText);
+            if (session?.user) {
+              await saveLog(
+                session.user.name || "",
+                session.user.email || "",
+                extractedText,
+                "droped",
+              );
+            }
+          } else {
+            toast.error("Imagen sin texto para extraer");
+          }
         } else {
-          toast.error("Imagen sin texto para extraer");
+          toast.error("Archivo no corresponde a una imagen");
         }
-      } else {
-        toast.error("Archivo no corresponde a una imagen");
       }
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const ImgToBs64Paste = async (
     event: React.ClipboardEvent<HTMLDivElement>,
   ) => {
-    setLoading(true);
-    const items = event.clipboardData.items;
-    if (items) {
-      for (let i = 0; i < items.length; i++) {
-        const item = items[i];
-        if (item.type.startsWith("image")) {
-          const file = item.getAsFile();
-          if (file) {
-            const base64String = await toBase64(file);
-	    console.log(base64String);
-            let extractedText = "";
-            extractedText = await processImage(base64String);
-            //if (isAiDetectionSelected) {
+    if (!showLoading) {
+      setLoading(true);
+      const items = event.clipboardData.items;
+      if (items) {
+        for (let i = 0; i < items.length; i++) {
+          const item = items[i];
+          if (item.type.startsWith("image")) {
+            const file = item.getAsFile();
+            if (file) {
+              const base64String = await toBase64(file);
+              let extractedText = "";
+              extractedText = await processImage(base64String);
+              //if (isAiDetectionSelected) {
               //extractedText = await analyzeImageFromBase64(base64String);
-            //} else {
-            //}
-            if (extractedText.length > 0) {
-              setInputValue(extractedText);
-            } else {
-              toast.error("Imagen sin texto para extraer");
+              //} else {
+              //}
+              if (extractedText.length > 0) {
+                setInputValue(extractedText);
+                if (session?.user) {
+                  await saveLog(
+                    session.user.name || "",
+                    session.user.email || "",
+                    extractedText,
+                    "pasted",
+                  );
+                }
+              } else {
+                toast.error("Imagen sin texto para extraer");
+              }
             }
+          } else {
+            toast.error("Lo copiado no corresponde a una imagen");
           }
-        } else {
-          toast.error("Lo copiado no corresponde a una imagen");
         }
       }
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleOnChangeFile = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    setLoading(true);
-    const file = event.target.files?.[0];
-    if (file) {
-      if (file.type.startsWith("image")) {
-        setFileName(file.name);
-        const base64String = await toBase64(file);
-        let extractedText = await processImage(base64String);
-        if (extractedText.length > 0) {
-          setInputValue(extractedText);
+    if (!showLoading) {
+      setLoading(true);
+      const file = event.target.files?.[0];
+      if (file) {
+        if (file.type.startsWith("image")) {
+          setFileName(file.name);
+          const base64String = await toBase64(file);
+          let extractedText = await processImage(base64String);
+          if (extractedText.length > 0) {
+            setInputValue(extractedText);
+            if (session?.user) {
+              await saveLog(
+                session.user.name || "",
+                session.user.email || "",
+                extractedText,
+                "file uploaded",
+              );
+            }
+          } else {
+            toast.error("Imagen sin texto para extraer");
+          }
         } else {
-          toast.error("Imagen sin texto para extraer");
+          toast.error("El archivo subido no es una imagen");
         }
-      } else {
-        toast.error("El archivo subido no es una imagen");
       }
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -119,7 +149,7 @@ export default function ImgToText() {
             isSelected={isAiDetectionSelected}
             onValueChange={
               //session ? setAiDetectionSelected : setAiDetectionSelectedNotLogIn
-	     setAiDetectionSelectedNotLogIn
+              setAiDetectionSelectedNotLogIn
             }
             color="primary"
           >
