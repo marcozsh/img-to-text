@@ -17,10 +17,13 @@ import { signOut } from "next-auth/react";
 
 type CustomNavBarType = {
   name?: string | null;
+
 };
 
 export default function CustomNavBar({ name }: CustomNavBarType) {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+
+
   const customSignout = () => {
     signOut({ callbackUrl: `/signin` });
   };
@@ -29,7 +32,7 @@ export default function CustomNavBar({ name }: CustomNavBarType) {
     ? [
         {
           name: name,
-          href: "",
+          href: `/${name}`,
           customFn: v,
         },
         {
@@ -84,9 +87,11 @@ export default function CustomNavBar({ name }: CustomNavBarType) {
         {name ? (
           <>
             <NavbarItem isActive>
-              <span className="text-primary dark:text-white dark:hover:text-primary dark:hover:transition-colors dark:hover:duration-300 dark:hover:ease-in-out cursor-default">
+	    <Link href={`/${name}`}>
+              <span className="text-primary dark:text-white dark:hover:text-primary dark:hover:transition-colors dark:hover:duration-300 dark:hover:ease-in-out">
                 {name}
               </span>
+	    </Link>
               <Button
                 className="bg-background"
                 onPress={() => {

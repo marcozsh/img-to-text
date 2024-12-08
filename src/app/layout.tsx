@@ -28,7 +28,7 @@ export default function RootLayout({
       	    <NavbarSession/>
             <Toaster position="top-left" />
             <Providers>{children}</Providers>
-            <Separator />
+            <Separator vertical={false} />
             <Footer />
       </ThemeProviders>
           </body>
