@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toBase64, processImage } from "@/logical/img-to-text";
 import {
   Button,
@@ -25,10 +25,16 @@ export default function ImgToText() {
   const [isAiDetectionSelected, setAiDetectionSelected] =
     useState<boolean>(false);
 
+  const [isInputSelected, setInputSelected] = useState<boolean>(true);
+
   const setAiDetectionSelectedNotLogIn = () => {
     //toast("Para usar esa función debes iniciar sesión"); // todo: add cloud vision from google to ai recognition
     toast("Esta función aún no está disponible");
   };
+
+  useEffect(() => {
+    setInputSelected(true);
+  }, []);
 
   const { data: session } = useSession();
 
@@ -39,6 +45,7 @@ export default function ImgToText() {
   const ImgToBs64Drop = async (event: React.DragEvent<HTMLDivElement>) => {
     if (!showLoading) {
       setLoading(true);
+      setInputSelected(false);
       event.preventDefault();
       const files = event.dataTransfer.files;
       if (files.length > 0) {
@@ -72,6 +79,7 @@ export default function ImgToText() {
   ) => {
     if (!showLoading) {
       setLoading(true);
+      setInputSelected(false);
       const items = event.clipboardData.items;
       if (items) {
         for (let i = 0; i < items.length; i++) {
@@ -114,6 +122,7 @@ export default function ImgToText() {
   ) => {
     if (!showLoading) {
       setLoading(true);
+      setInputSelected(false);
       const file = event.target.files?.[0];
       if (file) {
         if (file.type.startsWith("image")) {
@@ -143,7 +152,8 @@ export default function ImgToText() {
 
   return (
     <>
-      <section className="flex flex-col gap-7 pb-3 w-[90%] md:w-[700px] lg:w-[1000px] mt-40">{/*mt-24 with ai switch is active*/}
+      <section className="flex flex-col gap-7 pb-3 w-[90%] md:w-[700px] lg:w-[1000px] mt-40">
+        {/*mt-24 with ai switch is active*/}
         <div className="z-10 justify-start lg:justify-end hidden">
           <Switch
             isSelected={isAiDetectionSelected}
@@ -161,9 +171,9 @@ export default function ImgToText() {
 
         <div
           className="dark:bg-background flex flex-col items-center justify-center w-full h-96 border-2 rounded-md border-primary"
-          onPaste={ImgToBs64Paste}
-          onDrop={ImgToBs64Drop}
-          onDragOver={dropFunction}
+          onPaste={(event) => isInputSelected && ImgToBs64Paste(event)}
+          onDrop={(event) => isInputSelected && ImgToBs64Drop(event)}
+          onDragOver={(event) => isInputSelected && dropFunction(event)}
         >
           <div className="text-center mb-10">
             <p className="pb-4">Pega o Arrastra una Imagen Aquí o</p>
@@ -174,12 +184,17 @@ export default function ImgToText() {
                 placeholder="sube un archivo"
                 label="Sube un archivo"
                 className="hidden"
-                onChange={handleOnChangeFile}
+                onChange={(event) =>
+                  isInputSelected && handleOnChangeFile(event)
+                }
               />
 
               <button
                 className="w-full h-full"
-                onClick={() => document.getElementById("upload-file")?.click()}
+                onClick={() =>
+                  isInputSelected &&
+                  document.getElementById("upload-file")?.click()
+                }
               >
                 {fileName}
               </button>
@@ -209,6 +224,7 @@ export default function ImgToText() {
                 onClick={() => {
                   setInputValue("");
                   setFileName("Sube un archivo");
+                  setInputSelected(true);
                 }}
               >
                 Empezar de nuevo
@@ -223,7 +239,7 @@ export default function ImgToText() {
                 <p className="pb-2">
                   Resultado<span className="text-primary">:</span>
                 </p>
-                <Textarea isRequired value={inputValue} variant="faded" />
+                <Textarea value={inputValue} variant="faded"/>
               </>
             ) : (
               ""
