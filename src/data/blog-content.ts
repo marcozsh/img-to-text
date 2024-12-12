@@ -3,13 +3,13 @@ export const blogContent = [
     title: "¿Cómo funciona?",
     content: `
     	<p>
-    	1. Caputura una imagen (Windows + Shift + S) 
+    	1. Captura una imagen (Windows + Shift + S) 
 	</p>
     	<br> 
     	<p>2. Puedes hacer 1 de estas 3 acciones:</p> 
 	<ul style="list-style:disc;padding-left:40px">
-		<li> Puedes Guadarla para luego arrastrarla hasta el cuadro rojo</li>
-		<li> Puedes copiar la imagen dentro del cuadro rojo (CTRL + V)</li>
+		<li> Puedes Guardarla para luego arrastrarla hasta el cuadro rojo</li>
+		<li> Puedes copiar la imagen dentro del cuadro rojo (Ctrl + V)</li>
 		<li> Puedes subir la imagen presionando "Subir una imagen"</li>
 	   </ul>
     	<br> 
@@ -17,7 +17,7 @@ export const blogContent = [
 	3. Puedes copiar el texto transformado con el botón "Copiar al clipboard"
 	</p>
 	<br>
-	4. Por útlimo, presionar el botón "Empezar de nuevo" para volver a convertir una imagen a texto`,
+	4. Por último, presionar el botón "Empezar de nuevo" para volver a convertir una imagen a texto`,
   },
   {
     title: "¿Qué es Tesseract.js?",
