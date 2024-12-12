@@ -17,7 +17,7 @@ export const blogContent = [
 	3. Puedes copiar el texto transformado con el botón "Copiar al clipboard"
 	</p>
 	<br>
-	4. Por úttimo, presionar el botón "Empezar de nuevo" para volver a convertir una imagen a texto`,
+	4. Por útlimo, presionar el botón "Empezar de nuevo" para volver a convertir una imagen a texto`,
   },
   {
     title: "¿Qué es Tesseract.js?",
