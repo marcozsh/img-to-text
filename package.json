@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^0.10.4",
     "@nextui-org/react": "^2.4.8",
     "@vercel/postgres": "^0.10.0",
     "next": "15.0.3",
