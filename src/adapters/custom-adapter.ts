@@ -1,4 +1,3 @@
-//import { sql } from "@vercel/postgres";
 import { Adapter, AdapterUser } from "next-auth/adapters";
 
 import { getNeon } from "@/logical/db/db";

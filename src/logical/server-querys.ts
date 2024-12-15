@@ -1,7 +1,6 @@
 "use server";
 
-//import { sql } from "@vercel/postgres";
-import {getNeon} from "./db/db";
+import { getNeon } from "./db/db";
 
 const sql = await getNeon();
 
@@ -28,8 +27,9 @@ export const saveLog = async (
   try {
     const userId = await getUserByNameEmail(name, email);
     if (userId > 0) {
+      let todayDateString = new Date().toLocaleString();
       const inserted_log =
-        await sql`INSERT INTO public.text_converted_log (iduser, text, method_used) VALUES (${userId}, ${text}, ${method_used})`;
+        await sql`INSERT INTO public.text_converted_log (iduser, text, text_converter_date ,method_used) VALUES (${userId}, ${text},${todayDateString},${method_used})`;
     }
   } catch (ex) {
     console.log(ex);

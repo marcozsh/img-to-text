@@ -1,4 +1,3 @@
-//import { sql } from "@vercel/postgres";
 import LogCard from "./log-card";
 import {getUserByNameEmail} from "@/logical/server-querys";
 import {getNeon} from "@/logical/db/db";
