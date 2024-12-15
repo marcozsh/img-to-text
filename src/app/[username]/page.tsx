@@ -14,6 +14,8 @@ export default async function UsuarioPage({
 
   const session = await getServerSession(authOptions);
 
+  //console.log(session)
+
   if (usernameDecoded !== session?.user?.name) {
     notFound();
   }
