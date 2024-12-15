@@ -1,6 +1,8 @@
-import { sql } from "@vercel/postgres";
 import { Adapter, AdapterUser } from "next-auth/adapters";
 
+import { getNeon } from "@/logical/db/db";
+
+const sql = await getNeon();
 
 interface AdapterAccount {
   userId: string;
@@ -37,7 +39,7 @@ export const PgCustomAdapter = (): Adapter => {
           INSERT INTO public.users (name, email, image) 
           VALUES (${user.name}, ${user.email}, ${user.image}) 
           RETURNING id, name, email, image`;
-        return (result.rows[0] as AdapterUser) || undefined;
+        return (result[0] as AdapterUser) || undefined;
       } catch (error) {
         console.error("Error creando usuario:", error);
         throw error;
@@ -48,18 +50,18 @@ export const PgCustomAdapter = (): Adapter => {
       try {
         const result = await sql`
           SELECT id, name, email, image FROM public.users WHERE id = ${id}`;
-        return (result.rows[0] as AdapterUser) || null;
+        return (result[0] as AdapterUser) || null;
       } catch (error) {
         console.error("Error obteniendo usuario:", error);
         return null;
       }
     },
-    
+
     async getUserByEmail(email: string): Promise<AdapterUser | null> {
       try {
         const result = await sql`
           SELECT id, name, email, image FROM public.users WHERE email = ${email}`;
-        return (result.rows[0] as AdapterUser) || null;
+        return (result[0] as AdapterUser) || null;
       } catch (error) {
         console.error("Error obteniendo usuario por email:", error);
         return null;
@@ -79,7 +81,7 @@ export const PgCustomAdapter = (): Adapter => {
           FROM public.users
           JOIN public.accounts ON users.id = accounts."userId"
           WHERE accounts."providerAccountId" = ${providerAccountId} AND accounts.provider = ${provider}`;
-        return (result.rows[0] as AdapterUser) || null;
+        return (result[0] as AdapterUser) || null;
       } catch (error) {
         console.error("Error obteniendo usuario por cuenta:", error);
         return null;
@@ -95,7 +97,7 @@ export const PgCustomAdapter = (): Adapter => {
           SET name = ${user.name}, email = ${user.email}, image = ${user.image} 
           WHERE id = ${user.id} 
           RETURNING id, name, email, image`;
-        return result.rows[0] as AdapterUser;
+        return result[0] as AdapterUser;
       } catch (error) {
         console.error("Error actualizando usuario:", error);
         throw error;
@@ -112,6 +114,7 @@ export const PgCustomAdapter = (): Adapter => {
     },
 
     async linkAccount(account: AdapterAccount): Promise<void> {
+      console.log(account);
       try {
         await sql`
           INSERT INTO public.accounts ("userId", provider, "providerAccountId", type, access_token, expires_at, refresh_token, scope, token_type, id_token, session_state)
@@ -150,7 +153,7 @@ export const PgCustomAdapter = (): Adapter => {
           INSERT INTO public.sessions ("sessionToken", "userId", expires) 
           VALUES (${sessionToken}, ${userId}, ${expires.toISOString()}) 
           RETURNING id, "sessionToken", "userId", expires`;
-        return result.rows[0] as AdapterSession;
+        return result[0] as AdapterSession;
       } catch (error) {
         console.error("Error creando sesión:", error);
         throw error;
@@ -167,7 +170,7 @@ export const PgCustomAdapter = (): Adapter => {
           FROM public.sessions AS sessions
           JOIN public.users AS users ON sessions."userId" = users.id
           WHERE sessions."sessionToken" = ${sessionToken}`;
-        const row = result.rows[0];
+        const row = result[0];
 
         // Devuelve valores predeterminados si no se encuentra la sesión
         return {
@@ -219,7 +222,7 @@ export const PgCustomAdapter = (): Adapter => {
       SET expires = ${expires ? expires.toISOString() : null} 
       WHERE "sessionToken" = ${sessionToken} 
       RETURNING id, "sessionToken", "userId", expires`;
-        return (result.rows[0] as AdapterSession) || null;
+        return (result[0] as AdapterSession) || null;
       } catch (error) {
         console.error("Error actualizando sesión:", error);
         return null;
@@ -244,7 +247,7 @@ export const PgCustomAdapter = (): Adapter => {
           INSERT INTO public.verification_tokens (identifier, token, expires) 
           VALUES (${identifier}, ${token}, ${expires.toISOString()}) 
           RETURNING identifier, token, expires`;
-        return (result.rows[0] as VerificationToken) || null;
+        return (result[0] as VerificationToken) || null;
       } catch (error) {
         console.error("Error creando token de verificación:", error);
         return null;
@@ -263,7 +266,7 @@ export const PgCustomAdapter = (): Adapter => {
           DELETE FROM public.verification_tokens 
           WHERE identifier = ${identifier} AND token = ${token} 
           RETURNING identifier, token, expires`;
-        return (result.rows[0] as VerificationToken) || null;
+        return (result[0] as VerificationToken) || null;
       } catch (error) {
         console.error("Error usando token de verificación:", error);
         return null;
@@ -271,4 +274,3 @@ export const PgCustomAdapter = (): Adapter => {
     },
   };
 };
-

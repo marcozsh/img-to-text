@@ -6,6 +6,8 @@ import CustomNavBar from "@/components/custom-nav-bar";
 export default async function NavbarSession(): Promise<any> {
   const session = await getServerSession(authOptions);
 
+  //console.log(session)
+
   return (
       <div>
         {session !== null ? (
