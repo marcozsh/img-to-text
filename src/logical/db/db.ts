@@ -1,4 +1,6 @@
 "use server";
 import { neon } from "@neondatabase/serverless";
 
-export const getNeon = async () => neon(process.env.DATABASE_URL || "");
+const { DATABASE_URL = "" } = process.env;
+
+export const getNeon = async () => neon(DATABASE_URL);
