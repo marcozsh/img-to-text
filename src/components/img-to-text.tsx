@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { toBase64, processImage } from "@/logical/img-to-text";
+import { FiCopy } from "react-icons/fi";
 import {
   Button,
   CircularProgress,
@@ -173,14 +174,14 @@ export default function ImgToText() {
 
         <Tooltip
           placement="bottom-start"
-	  showArrow={true}
-	  isDisabled={!isInputSelected}
+          showArrow={true}
+          isDisabled={!isInputSelected}
           content={
             <div className="px-1 py-2">
               <div className="text-small font-bold">Atención</div>
               <div className="text-tiny">
-                Es probable que si adjunta una imagen sin texto, el
-                resultado no sea el esperado
+                Es probable que si adjunta una imagen sin texto, el resultado no
+                sea el esperado
               </div>
             </div>
           }
@@ -229,20 +230,6 @@ export default function ImgToText() {
             {inputValue != "" ? (
               <Button
                 color="danger"
-                onClick={() =>
-                  copyToClipboard(inputValue).then(() =>
-                    toast.success("texto copiado"),
-                  )
-                }
-              >
-                Copiar al clipboard
-              </Button>
-            ) : (
-              ""
-            )}
-            {inputValue != "" ? (
-              <Button
-                color="danger"
                 onClick={() => {
                   setInputValue("");
                   setFileName("Sube un archivo");
@@ -261,7 +248,21 @@ export default function ImgToText() {
                 <p className="pb-2">
                   Resultado<span className="text-primary">:</span>
                 </p>
-                <Textarea value={inputValue} variant="faded" />
+                <div className="flex flex-row justify-end">
+                  <Tooltip content={"copiar al clipboard"}>
+                    <div className="m-4 absolute z-10 cursor-pointer">
+                      <FiCopy
+		      className="text-primary"
+                        onClick={() =>
+                          copyToClipboard(inputValue).then(() =>
+                            toast.success("texto copiado"),
+                          )
+                        }
+                      />
+                    </div>
+                  </Tooltip>
+                  <Textarea value={inputValue} variant="faded" />
+                </div>
               </>
             ) : (
               ""
