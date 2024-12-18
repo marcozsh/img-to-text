@@ -33,3 +33,4 @@ export const processImage = async (base64String: string): Promise<string> => {
     }
   });
 };
+
