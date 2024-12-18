@@ -8,6 +8,7 @@ import {
   Input,
   //Switch,
   Textarea,
+  Tooltip,
 } from "@nextui-org/react";
 import { copyToClipboard } from "@/logical/utils";
 import toast from "react-hot-toast";
@@ -170,45 +171,59 @@ export default function ImgToText() {
         </div>
 	*/}
 
-        <div
-          className={`dark:bg-background flex flex-col items-center justify-center w-full h-96 border-2 rounded-md ${
-            isInputSelected && `border-primary`
-          }`}
-          onPaste={(event) => isInputSelected && ImgToBs64Paste(event)}
-          onDrop={(event) => isInputSelected && ImgToBs64Drop(event)}
-          onDragOver={(event) => isInputSelected && dropFunction(event)}
+        <Tooltip
+          placement="bottom-start"
+	  showArrow={true}
+	  isDisabled={!isInputSelected}
+          content={
+            <div className="px-1 py-2">
+              <div className="text-small font-bold">Atención</div>
+              <div className="text-tiny">
+                Es probable que si adjunta una imagen sin texto, el
+                resultado no sea el esperado
+              </div>
+            </div>
+          }
         >
-          <div className="text-center mb-10">
-            <p className="pb-4">Pega o Arrastra una Imagen Aquí o</p>
-            <div
-              className={`border h-[90%] rounded-md dark:hover:transition-colors dark:hover:duration-300 dark:hover:ease-in-out ${
-                isInputSelected && `border-primary hover:bg-primary`
-              }`}
-            >
-              <Input
-                id="upload-file"
-                type="file"
-                placeholder="sube un archivo"
-                label="Sube un archivo"
-                className="hidden"
-                onChange={(event) =>
-                  isInputSelected && handleOnChangeFile(event)
-                }
-              />
-
-              <button
-                className="w-full h-full"
-                onClick={() =>
-                  isInputSelected &&
-                  document.getElementById("upload-file")?.click()
-                }
+          <div
+            className={`dark:bg-background flex flex-col items-center justify-center w-full h-96 border-2 rounded-md ${
+              isInputSelected && `border-primary`
+            }`}
+            onPaste={(event) => isInputSelected && ImgToBs64Paste(event)}
+            onDrop={(event) => isInputSelected && ImgToBs64Drop(event)}
+            onDragOver={(event) => isInputSelected && dropFunction(event)}
+          >
+            <div className="text-center mb-10">
+              <p className="pb-4">Pega o Arrastra una Imagen Aquí o</p>
+              <div
+                className={`border h-[90%] rounded-md dark:hover:transition-colors dark:hover:duration-300 dark:hover:ease-in-out ${
+                  isInputSelected && `border-primary hover:bg-primary`
+                }`}
               >
-                {fileName}
-              </button>
+                <Input
+                  id="upload-file"
+                  type="file"
+                  placeholder="sube un archivo"
+                  label="Sube un archivo"
+                  className="hidden"
+                  onChange={(event) =>
+                    isInputSelected && handleOnChangeFile(event)
+                  }
+                />
+
+                <button
+                  className="w-full h-full"
+                  onClick={() =>
+                    isInputSelected &&
+                    document.getElementById("upload-file")?.click()
+                  }
+                >
+                  {fileName}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-
+        </Tooltip>
         <div>
           <div className="flex flex-row justify-end gap-2">
             {inputValue != "" ? (
