@@ -13,15 +13,12 @@ const urlHost = process.env.NEXT_PUBLIC_URL_HOST;
 
 const title = "Convertir Imagen a Texto";
 
-const description = `App fácil de usar para convertir imágenes a texto utilizando Tesseract.js 
-para el reconocimiento óptico de caracteres (OCR).`;
+const description = `App fácil de usar para convertir imágenes a texto utilizando Tesseract.js para el reconocimiento óptico de caracteres (OCR).`;
 
 export const metadata: Metadata = {
   title: title,
   description: description,
-  keywords: `imagen, texto, convertir, ocr, reconocimiento, optico, 
-  	   caracteres, img, txt, img to text, 
-  	  img2txt, img2text, img to txt, img2txt`,
+  keywords: `imagen, texto, convertir, ocr, reconocimiento, optico, caracteres, img, txt, img to text, img2txt, img2text, img to txt, img2txt`,
   authors: [{ name: "Marco Peña" }],
   robots: "index, follow",
   icons: { icon: "/favicon.ico", apple: "/favicon.ico" },
@@ -32,6 +29,9 @@ export const metadata: Metadata = {
     images: [{ url: "/img-principal.png", alt: title }],
     url: urlHost,
     type: "website",
+    countryName: "Chile",
+    emails: "marc.penar@outlook.cl",
+    siteName: "Convertir Imagen a Texto",
   },
   twitter: {
     title: title,
